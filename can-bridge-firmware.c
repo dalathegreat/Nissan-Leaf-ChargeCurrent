@@ -1,7 +1,7 @@
 #include "can-bridge-firmware.h"
 
 //variables used for CurrentControl
-volatile	uint16_t	max_current		= 320; //in 0.1kW increments, offset -100 // Max power that battery can be charged with (LB_MAX_POWER_FOR_CHARGER)
+volatile	uint16_t	max_current	= 320; //in 0.1kW increments, offset -10 // Max power that battery can be charged with (LB_MAX_POWER_FOR_CHARGER)
 
 //example valid CAN frame
 volatile	can_frame_t	static_message = {.can_id = 0x5BC, .can_dlc = 8, .data = {0,0,0,0,0,0,0,0}};
@@ -286,8 +286,11 @@ void can_handler(uint8_t can_bus){
 		
 		switch(frame.can_id){	
 			case 0x1DC:	
-
-				max_current = 320; //*0.1 - 10 offset = 3.2kW?
+				//Some values to test with
+				//max_current = 320; //320 = 22kW ((320*0.1)-10=22kW)
+				max_current = 133; //133 = 3.3kW ((133*0.1)-10= 3.3kW)
+				//max_current = 116; //116 = 1.6kW ((116*0,1)-10= 1.6kW)
+				
 				//Here is how to overwrite the maximum allowed current going into the battery
 				frame.data[2] = (frame.data[2] & 0xF0) | (max_current >> 6);
 				frame.data[3] = (max_current << 2) | 3;
