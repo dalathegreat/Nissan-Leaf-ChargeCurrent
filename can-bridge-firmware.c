@@ -1,7 +1,8 @@
 #include "can-bridge-firmware.h"
 
 //variables used for CurrentControl
-volatile	uint16_t	max_current	= 320; //in 0.1kW increments, offset -10 // Max power that battery can be charged with (LB_MAX_POWER_FOR_CHARGER)
+volatile	uint16_t	max_current	= 320; //in 0.1kW increments, offset -10 // Max power that battery can be charged with, we use this variable as override
+volatile	uint16_t	battery_current_demand = 0; //the charge max signal that battery is requesting right now (LB_MAX_POWER_FOR_CHARGER)
 
 //example valid CAN frame
 volatile	can_frame_t	static_message = {.can_id = 0x5BC, .can_dlc = 8, .data = {0,0,0,0,0,0,0,0}};
@@ -286,15 +287,23 @@ void can_handler(uint8_t can_bus){
 		
 		switch(frame.can_id){	
 			case 0x1DC:	
+				//check what battery is currently requesting as max charger kW
+				battery_current_demand = ((frame.data[2] & 0x0F) << 6 | (frame.data[3] >> 2));
+
 				//Some values to test with
 				//max_current = 320; //320 = 22kW ((320*0.1)-10=22kW)
 				max_current = 133; //133 = 3.3kW ((133*0.1)-10= 3.3kW)
 				//max_current = 116; //116 = 1.6kW ((116*0,1)-10= 1.6kW)
 				
-				//Here is how to overwrite the maximum allowed current going into the battery
-				frame.data[2] = (frame.data[2] & 0xF0) | (max_current >> 6);
-				frame.data[3] = (max_current << 2) | 3;
-				
+				//Only overwrite max current if the battery requested is bigger than the maximum you want to limit it to.
+				//Otherwise there is risk that battery wants to reduce to 500W, and you are forcing it to 3.3kW!
+				if (battery_current_demand > max_current)
+				{
+					//Here is how to overwrite the maximum allowed current going into the battery
+					frame.data[2] = (frame.data[2] & 0xF0) | (max_current >> 6);
+					frame.data[3] = (max_current << 2) | 3;
+				}
+
 				calc_crc8(&frame);	//this routine calculates the CRC using radix 0x85 and puts that CRC in frame.data[7]
 				break;
 			default:
