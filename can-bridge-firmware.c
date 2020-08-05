@@ -317,7 +317,7 @@ void can_handler(uint8_t can_bus){
 			uint8_t blacklist = 0;
 			switch(frame.can_id){				
 				case 0x59E: 
-					blacklist = 1;
+					blacklist = 0;
 					break;
 				default:
 					blacklist = 0;					
