@@ -3,11 +3,20 @@ Adjusting AC max charge speed is something that most EV makers have on their veh
 
 Current state of the software: 
 * Outputs the max AC charge power via USB. This can be read with e.g. Termite.
-* Hardcoded to limit AC charging to an configurable value (3.3 / 1.6kW) Select before compiling
+* 7 different steps of adjustability (Unrestricted/6/5/4/3/2/1)kW
 
-Long term vision: When car is slowcharging, it should be possible to turn down the charge speed using the HVAC controls. This can easily be achieved with the fan controls, simply check if some condition is present (Car is charging && HVAC recirc is ON && FAN speed is MAX), and then go into a setting menu, where tuning down the fan will also tune down the charge current. Very important to only go DOWN, since going up can damage electrical installations. The AMP setting can be visualized with the SOC% on the dashboard.
+## How to tune the max kW setting
+When the car is connected to an EVSE and is slowcharging, turn on the car to wake up the HVAC controls. Set the fan to maximum speed(7), and switch on recirculation mode. You will see the capacity bars on the dash board start to move, along with the SOC% if you have the newer LEAF that has this. These are the current options
+Condition held:
+<4s - Unrestricted kW, 12bars, SOC%=66
+>4s - 6.0kW, 11bars, SOC%=60
+>6s - 5.0kW, 10bars, SOC%=50
+>8s - 4.0kW, 9bars, SOC%=40
+>10s - 3.0kW, 8bars, SOC%=30
+>12s - 2.0kW, 7bars, SOC%=20
+>14s - 1.0kW, 6bars, SOC%=10
 
-## How to take software into use
+## I want this! How do I get started?
 * Download the muxsan repository: https://bitbucket.org/emile_nijssen/open-source-can-bridge/src/master/ 
 * Replace the _can-bridge-firmware.c_ file with the one found from this repository
 * Compile with Atmel Studio 7, and flash the firmware onto a 3-port CAN bridge
