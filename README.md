@@ -8,13 +8,13 @@ Current state of the software:
 ## How to tune the max kW setting
 When the car is connected to an EVSE and is slowcharging, turn on the car to wake up the HVAC controls. Set the fan to maximum speed(7), and switch on recirculation mode. You will see the capacity bars on the dash board start to move, along with the SOC% if you have the newer LEAF that has this. These are the current options
 Condition held:
-<4s - Unrestricted kW, 12bars, SOC%=66
->4s - 6.0kW, 11bars, SOC%=60
->6s - 5.0kW, 10bars, SOC%=50
->8s - 4.0kW, 9bars, SOC%=40
->10s - 3.0kW, 8bars, SOC%=30
->12s - 2.0kW, 7bars, SOC%=20
->14s - 1.0kW, 6bars, SOC%=10
+* under 4s Unrestricted kW, 12bars, SOC%=66
+* over 4s = 6.0kW, 11bars, SOC%=60
+* over 6s = 5.0kW, 10bars, SOC%=50
+* over 8s = 4.0kW, 9bars, SOC%=40
+* over 10s = 3.0kW, 8bars, SOC%=30
+* over 12s = 2.0kW, 7bars, SOC%=20
+* over 14s = 1.0kW, 6bars, SOC%=10
 
 ## I want this! How do I get started?
 * Download the muxsan repository: https://bitbucket.org/emile_nijssen/open-source-can-bridge/src/master/ 
