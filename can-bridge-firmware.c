@@ -346,32 +346,19 @@ void can_handler(uint8_t can_bus){
 			break;
 			case 0x5BC:
 				//Section for visualizing the max charge with the help of capacity bars on the dash
-				#ifdef LEAF_2011 //2011 works a bit differently when it comes to visualizing battery saver
-				mux_5bc_CapacityCharge = frame.data[4] & 0x01;
-				if (timeToSetCapacityDisplay > 0)
-				{ //Quite untested
-					if (mux_5bc_CapacityCharge == 0) //0 == capacitybars, 1 == chargebars
-					{
-						frame.data[2] = (uint8_t) ((frame.data[2] & 0x0F) | SetCapacityDisplay << 4); //TODO, correct location?
-					}
-				}
-				#endif
-				#ifdef LEAF_2014
-				//Section for visualizing the max charge with the help of capacity bars on the dash
-				mux_5bc_CapacityCharge = (frame.data[4] & 0x0F); //Save the mux containing info if we have capacity or chargebars in the message [8 / 9] [40kWh 14/15]
+				mux_5bc_CapacityCharge = frame.data[4] & 0x01; 
 				if (timeToSetCapacityDisplay > 0)
 				{
-					#ifdef BATTERY_40KWH
-					if (mux_5bc_CapacityCharge == 15) {frame.data[2] = (uint8_t) ((frame.data[2] & 0x0F) | SetCapacityDisplay << 4);} //Confirmed working
-					#endif
-					#ifdef BATTERY_30KWH
-					if (mux_5bc_CapacityCharge == 8) {frame.data[2] = (uint8_t) ((frame.data[2] & 0x0F) | SetCapacityDisplay << 4);} //TODO TEST
-					#endif
-					#ifdef BATTERY_24KWH
-					if (mux_5bc_CapacityCharge == 8) {frame.data[2] = (uint8_t) ((frame.data[2] & 0x0F) | SetCapacityDisplay << 4);} //TODO TEST
-					#endif
+					if (mux_5bc_CapacityCharge == 1)
+					{
+						#ifdef LEAF_2011 //2011 works a bit differently when it comes to visualizing battery saver
+						frame.data[2] = (uint8_t) ((frame.data[2] & 0xF0) | SetCapacityDisplay);
+						#endif
+						#ifdef LEAF_2014
+						frame.data[2] = (uint8_t) ((frame.data[2] & 0x0F) | SetCapacityDisplay << 4);
+						#endif
+					}
 				}
-				#endif
 			break;
 			case 0x54B: //100ms AC Auto amp, collect button presses for setting current and switching logic
 				VentModeStatus = (frame.data[3]);
