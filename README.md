@@ -1,5 +1,5 @@
 # Nissan-Leaf-ChargeCurrent
-Adjusting AC max charge speed is something that most EV makers have on their vehicles. This setting is ofter accessed via a touchscreen inside the vehicle. Unfortunately, the Nissan Leaf is not equipped with this setting, even though the on-board-charger is technically able to decide what amount of power can go into the battery. This has led owners of the Leaf to rely on the EVSE to set the correct max power lever. Often leading to the user having to opt for a more expenive EVSE that has some current control on the cable/handle. The code here aims to correct this, and enable setting the charge speed from within the vehicle.
+Adjusting AC max charge speed is something that most EV makers have on their vehicles. This setting is ofter accessed via a touchscreen inside the vehicle. Unfortunately, the Nissan Leaf is not equipped with this setting, even though the on-board-charger is technically able to decide what amount of power can go into the battery. This has led owners of the Leaf to rely on the EVSE to set the correct max power lever. Often leading to the user having to opt for a more expenive EVSE that has some current control on the cable/handle. The code here aims to correct this, and enable setting the charge speed from within the vehicle. See this video for full explanation: https://www.youtube.com/watch?v=u6fHHyJBMu8
 
 Current state of the software: 
 * Outputs the max AC charge power via USB. This can be read with e.g. Termite.
@@ -16,7 +16,9 @@ Condition held:
 * over 12s = 2.0kW, 7bars, SOC%=20
 * over 14s = 1.0kW, 6bars, SOC%=10
 
+
 ## I want this! How do I get started?
+* Setup compilation environment according to this guide: https://www.youtube.com/watch?v=ecmgrjJjQGo
 * Download the muxsan repository: https://bitbucket.org/emile_nijssen/open-source-can-bridge/src/master/ 
 * Replace the _can-bridge-firmware.c_ file with the one found from this repository
 * Compile with Atmel Studio 7, and flash the firmware onto a 3-port CAN bridge
